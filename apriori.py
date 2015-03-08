@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 def apriori(transaction_db, n, min_sup):
     '''Consumes a transaction database and a positive integer representing the 
@@ -34,7 +34,7 @@ def vertical_dataform(data_dict):
 def count_itemsets(itemsets_dict,transactions_dict):
     '''given a dict of itemsets (initialized to zero) and a transaction database, 
     returns counts of itemsets in the TDB'''
-    itemsets_dict2 = itemsets_dict.copy()
+    itemsets_dict2 = itemsets_dict
     for user in transactions_dict:
         user_items = transactions_dict[user].keys()
         for itemset in itemsets_dict2:
@@ -50,7 +50,7 @@ def count_itemsets(itemsets_dict,transactions_dict):
 
 def prune_infreq_itemsets(itemsets_dict, min_sup):
     '''prune itemsets whose support is less than min_sup''' 
-    itemsets_dict2 = itemsets_dict.copy()
+    itemsets_dict2 = itemsets_dict
     small_subs = []
     for key in itemsets_dict2:
         if itemsets_dict2[key] < min_sup:
@@ -84,5 +84,10 @@ def subset(smallset, bigset):
         if i not in bigset:
             return False
     return True
+
+
+
+# In[ ]:
+
 
 
