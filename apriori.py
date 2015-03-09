@@ -1,8 +1,3 @@
-
-# coding: utf-8
-
-# In[1]:
-
 def apriori(transaction_db, n, min_sup):
     '''Consumes a transaction database and a positive integer representing the 
     size of the itemsets to be generated, and a minimum support.
@@ -37,6 +32,7 @@ def count_itemsets(itemsets_dict,transactions_dict):
     itemsets_dict2 = itemsets_dict
     for user in transactions_dict:
         user_items = transactions_dict[user].keys()
+        user_items.sort()
         for itemset in itemsets_dict2:
             # 1-itemsets are stored as strings
             # larger than 1-itemsets are stored as tuples
@@ -60,34 +56,61 @@ def prune_infreq_itemsets(itemsets_dict, min_sup):
     return itemsets_dict2
 
         
-def gen_candidates(itemsets):
-    '''given an n-itemset, generates a (n+1)-itemset'''
+def gen_candidates(itemsets, n):
+    '''given an n-itemset, generates a (n+1)-itemset
+    also requires value of n i.e. the size of the itemset in the itemsets given'''
     itemsets2 = {}
-    for key1 in itemsets:
-        for key2 in itemsets:
-            if type(key1) == str and type(key2) == str:
+    first_iter = True
+    str_bit = 0
+    
+    #there are two options here. 
+    #1. the 1-itemsets need to be created from TDB
+    #2. the n-itemsets (n>1) need to cbe reated from (n-1)-itemsets
+    #These two separate procedures were created because each itemset is
+    #stored as a tuple, but python will use the contents of a 1-tuple directly
+    #when trying to use it as a key to a dict
+    
+    if n == 1:
+        for key1 in itemsets:
+            for key2 in itemsets:
                 if key1 < key2: 
                     itemsets2[(key1,key2)]= 0
                 elif key1 > key2:
                     itemsets2[(key2,key1)]= 0
-            else:
-                if subset(key1[:-1],key2[:-1]):
-                    if key1[-1] != key2[-1]:
-                        key = list(key1)
-                        key.append(key2[-1])
+    else:
+        for key1 in itemsets:
+            for key2 in itemsets:
+                if key1[:-1]==key2[:-1]:
+                    key1_last = key1[-1]
+                    key2_last = key2[-1]
+                    if key1_last != key2_last:
+                        if key1_last < key2_last:
+                            # create a key with both the last elements from key1 and key2
+                            # keep sorted
+                            key = list(key1)
+                            key.append(key2_last)
+                        else:
+                            key = list(key2)
+                            key.append(key1_last)
                         itemsets2[tuple(key)] = 0
     return itemsets2
+    
 
 # check whether smallset is a subset of bigset
 def subset(smallset, bigset):
+    '''expects bigset to be sorted in ascending order'''
     for i in smallset:
-        if i not in bigset:
+        if not(binary_search(bigset, i, 0, len(bigset)-1)):
             return False
     return True
 
-
-
-# In[ ]:
-
-
-
+def binary_search(lst, x, imin, imax):
+    while (imin<=imax):
+        imid = (imin+imax)/2
+        if lst[imid] == x:
+            return imid
+        elif lst[imid] < x:
+            imin = imid + 1
+        else:
+            imax = imid - 1
+    return False
