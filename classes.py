@@ -3,6 +3,7 @@ class itemset:
     
     def __init__(self):
         self.data = {}
+        self.transaction_db = {}
         self.last_itemsets = 0
     
     def create_tdb_from_csv(self,csv_file):
@@ -11,7 +12,7 @@ class itemset:
         user = <any>, item = <any - has to support comparisions>, count = <int,float>'''
         N = sum(1 for line in open(csv_file))
         infile = open(csv_file, "r")
-        self.data['transaction_db'] = {}
+        #self.data['transaction_db'] = {}
         for line in infile:
             line = line.rstrip()
             l = line.split(',')
@@ -19,10 +20,10 @@ class itemset:
             key = l[1]
             counts = l[2]
             try:
-                self.data['transaction_db'][user]
+                self.transaction_db[user]
             except: 
-                self.data['transaction_db'][user] = {}
-            self.data['transaction_db'][user][key] = counts
+                self.transaction_db[user] = {}
+            self.transaction_db[user][key] = counts
 
     def apriori(self, n, min_sup):
         '''Consumes a transaction database and a positive integer representing the 
@@ -32,7 +33,7 @@ class itemset:
         if n<=0 or type(n) != int or min_sup<0 or type(min_sup) != int:
             raise ValueError('n must be an greater than 0; min_sup n must be an greater or equal to 0')
         
-        transaction_db = self.data['transaction_db']
+        transaction_db = self.transaction_db
         
         for i in range(self.last_itemsets,n):
             prev_itemsets = 'itemsets'+str(i) 
