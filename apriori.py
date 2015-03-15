@@ -1,3 +1,4 @@
+from itertools import combinations
 def apriori(transaction_db, n, min_sup):
     '''Consumes a transaction database and a positive integer representing the 
     size of the itemsets to be generated, and a minimum support.
@@ -22,7 +23,7 @@ def vertical_dataform(data_dict):
     vert_dict = {}
     for user in data_dict:
         for key in data_dict[user]:
-            vert_dict[(key)] = 0
+            vert_dict[(key,)] = 0
     return vert_dict
 
 
@@ -66,9 +67,6 @@ def gen_candidates(itemsets, n):
     #there are two options here. 
     #1. the 1-itemsets need to be created from TDB
     #2. the n-itemsets (n>1) need to cbe reated from (n-1)-itemsets
-    #These two separate procedures were created because each itemset is
-    #stored as a tuple, but python will use the contents of a 1-tuple directly
-    #when trying to use it as a key to a dict
     
     if n == 1:
         for key1 in itemsets:
@@ -99,12 +97,14 @@ def gen_candidates(itemsets, n):
 # check whether smallset is a subset of bigset
 def subset(smallset, bigset):
     '''expects bigset to be sorted in ascending order'''
-    for i in smallset:
-        if not(binary_search(bigset, i, 0, len(bigset)-1)):
+    for i in smallset: 
+        if binary_search(bigset, i, 0, len(bigset)-1) == None:
             return False
+        #print i
     return True
 
 def binary_search(lst, x, imin, imax):
+    ''' returns index if x is found, None otherwise'''
     while (imin<=imax):
         imid = (imin+imax)/2
         if lst[imid] == x:
@@ -113,4 +113,24 @@ def binary_search(lst, x, imin, imax):
             imin = imid + 1
         else:
             imax = imid - 1
-    return False
+    return None
+
+# def generate_subsets (itemset):
+#     ''' generates all non empty subsets of itemset of size up to len(itemset)-1'''
+#     output = set()
+#     itemset = sorted(itemset)
+#     for i in range(1,len(itemset)):
+#         output.add(combinations(itemset, i))
+#     output2 = set()
+#     for i in output:
+#         output2 = output2.union(set(i))
+#     return output2
+
+def generate_subsets (itemset):
+    ''' generates all non empty subsets of itemset of size up to len(itemset)-1'''
+    output = set()
+    itemset = sorted(itemset)
+    for i in range(1,len(itemset)):
+        output = output.union(set(combinations(itemset, i)))
+    return output
+    
