@@ -35,14 +35,8 @@ def count_itemsets(itemsets_dict,transactions_dict):
         user_items = transactions_dict[user].keys()
         user_items.sort()
         for itemset in itemsets_dict2:
-            # 1-itemsets are stored as strings
-            # larger than 1-itemsets are stored as tuples
-            if type(itemset) == str:
-                if itemset in user_items:
-                    itemsets_dict2[itemset] +=1
-            else:
-                if subset(itemset,user_items):
-                    itemsets_dict2[itemset] +=1
+            if subset(itemset,user_items):
+                itemsets_dict2[itemset] +=1
     return itemsets_dict2
 
 def prune_infreq_itemsets(itemsets_dict, min_sup):
@@ -64,33 +58,21 @@ def gen_candidates(itemsets, n):
     first_iter = True
     str_bit = 0
     
-    #there are two options here. 
-    #1. the 1-itemsets need to be created from TDB
-    #2. the n-itemsets (n>1) need to cbe reated from (n-1)-itemsets
-    
-    if n == 1:
-        for key1 in itemsets:
-            for key2 in itemsets:
-                if key1 < key2: 
-                    itemsets2[(key1,key2)]= 0
-                elif key1 > key2:
-                    itemsets2[(key2,key1)]= 0
-    else:
-        for key1 in itemsets:
-            for key2 in itemsets:
-                if key1[:-1]==key2[:-1]:
-                    key1_last = key1[-1]
-                    key2_last = key2[-1]
-                    if key1_last != key2_last:
-                        if key1_last < key2_last:
-                            # create a key with both the last elements from key1 and key2
-                            # keep sorted
-                            key = list(key1)
-                            key.append(key2_last)
-                        else:
-                            key = list(key2)
-                            key.append(key1_last)
-                        itemsets2[tuple(key)] = 0
+    for key1 in itemsets:
+        for key2 in itemsets:
+            if key1[:-1]==key2[:-1]:
+                key1_last = key1[-1]
+                key2_last = key2[-1]
+                if key1_last != key2_last:
+                    if key1_last < key2_last:
+                        # create a key with both the last elements from key1 and key2
+                        # keep sorted
+                        key = list(key1)
+                        key.append(key2_last)
+                    else:
+                        key = list(key2)
+                        key.append(key1_last)
+                    itemsets2[tuple(key)] = 0
     return itemsets2
     
 
@@ -115,16 +97,6 @@ def binary_search(lst, x, imin, imax):
             imax = imid - 1
     return None
 
-# def generate_subsets (itemset):
-#     ''' generates all non empty subsets of itemset of size up to len(itemset)-1'''
-#     output = set()
-#     itemset = sorted(itemset)
-#     for i in range(1,len(itemset)):
-#         output.add(combinations(itemset, i))
-#     output2 = set()
-#     for i in output:
-#         output2 = output2.union(set(i))
-#     return output2
 
 def generate_subsets (itemset):
     ''' generates all non empty subsets of itemset of size up to len(itemset)-1'''

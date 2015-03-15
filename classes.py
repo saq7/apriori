@@ -1,5 +1,6 @@
-from apriori import vertical_dataform, subset, count_itemsets, gen_candidates, prune_infreq_itemsets
-class itemset:
+
+from apriori import * #vertical_dataform, subset, count_itemsets, gen_candidates, prune_infreq_itemsets
+class itemsets:
     
     def __init__(self):
         self.data = {}
@@ -52,3 +53,35 @@ class itemset:
         '''returns n-itemset if it has been computed, otherwise raises key exception'''
         x = 'itemsets'+str(n)
         return self.data[x]
+    
+    def get_support (self,itemset):
+        length = len(itemset)
+        itemset_in_data = 'itemsets'+str(length)
+        support = self.data[itemset_in_data][itemset]
+        return support
+    
+    def mine_assoc_rules (self, min_conf):
+        '''given an itemsets obj, mines all association rules that meet min_conf threshold'''
+        largest_itemset = 'itemsets'+str(self.last_itemsets)
+        largest_itemset = self.data[largest_itemset]
+        output_set = set()
+        for itemset in largest_itemset:
+            rules = self.itemset_confidence(itemset)
+            for rule in rules:
+                if rule[-1] >= min_conf:
+                    output_set.add(rule)
+        return output_set
+    
+    
+    def itemset_confidence (self,itemset):
+        '''consumes an itemset, returns a set of tuples of the form (A, B, conf) ; P(B|A) = conf'''
+        subsets = generate_subsets(itemset)
+        support_itemset = self.get_support(itemset)            
+        itemset = set(itemset)
+        output = set()
+        for subset in subsets:
+            support_subset = self.get_support(subset)
+            diffitems = tuple(itemset.difference(subset))
+            output_tuple = (diffitems,subset,float(support_itemset)/support_subset)
+            output.add(output_tuple)
+        return output
