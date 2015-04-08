@@ -1,7 +1,6 @@
-
-from apriori import * #vertical_dataform, subset, count_itemsets, gen_candidates, prune_infreq_itemsets
+import apriori#vertical_dataform, subset, apriori.count_itemsets, gen_candidates, prune_infreq_itemsets
 class itemsets:
-    
+
     def __init__(self):
         self.data = {}
         self.transaction_db = {}
@@ -40,11 +39,11 @@ class itemsets:
             prev_itemsets = 'itemsets'+str(i) 
             new_itemsets = 'itemsets'+str(i+1)
             if i == 0:
-                itemsets = vertical_dataform(transaction_db)
+                itemsets = apriori.vertical_dataform(transaction_db)
             else:
-                itemsets = gen_candidates(self.data[prev_itemsets], self.last_itemsets)
-            itemsets = count_itemsets(itemsets, transaction_db)
-            itemsets = prune_infreq_itemsets(itemsets, min_sup)
+                itemsets = apriori.gen_candidates(self.data[prev_itemsets], self.last_itemsets)
+            itemsets = apriori.count_itemsets(itemsets, transaction_db)
+            itemsets = apriori.prune_infreq_itemsets(itemsets, min_sup)
             self.data[new_itemsets]=itemsets
             self.last_itemsets = i + 1
         #return itemsets
@@ -75,7 +74,7 @@ class itemsets:
     
     def itemset_confidence (self,itemset):
         '''consumes an itemset, returns a set of tuples of the form (A, B, conf) ; P(B|A) = conf'''
-        subsets = generate_subsets(itemset)
+        subsets = apriori.generate_subsets(itemset)
         support_itemset = self.get_support(itemset)            
         itemset = set(itemset)
         output = set()
