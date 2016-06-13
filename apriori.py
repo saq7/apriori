@@ -106,10 +106,12 @@ def binary_search(lst, x, imin, imax):
 
 
 def generate_subsets (itemset):
-    ''' generates all non empty subsets of itemset of size up to len(itemset)-1'''
+    ''' generates all non empty subsets of 
+        itemset of size up to len(itemset)-1'''
     output = set()
     itemset = sorted(itemset)
     for i in range(1,len(itemset)):
-        output = output.union(set(combinations(itemset, i)))
+        output = output.union(
+            set(combinations(itemset, i)))
     return output
     
