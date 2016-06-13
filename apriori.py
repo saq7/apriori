@@ -1,7 +1,9 @@
 from itertools import combinations
 def apriori(transaction_db, n, min_sup):
-    '''Consumes a transaction database and a positive integer representing the 
-    size of the itemsets to be generated, and a minimum support.
+    '''Consumes a transaction database and a 
+    positive integer representing the 
+    size of the itemsets to be generated, 
+    and a minimum support.
     Produces n-itemsets that meet minsup.'''
     if n<=0 or type(n) != int:
         raise ValueError('n must greater than 0')
@@ -16,10 +18,12 @@ def apriori(transaction_db, n, min_sup):
         
 
 def vertical_dataform(data_dict):
-    '''given a user-transaction dict of the form {'user_1': {'item_1':quantity,...,'item_n':quantity},
-                                                  ..., 
-                                                 'user_m':{'item_1':quantity,...,'item_n':quantity}}
-       produces a dict, with all values initialized to zero, of items 1 through n as keys'''
+    '''given a user-transaction dict of the form 
+    {'user_1': {'item_1':quantity,...,'item_n':quantity},
+    ..., 
+    'user_m':{'item_1':quantity,...,'item_n':quantity}}
+    produces a dict, with all values initialized to zero, 
+    of items 1 through n as keys'''
     vert_dict = {}
     for user in data_dict:
         for key in data_dict[user]:
@@ -28,7 +32,8 @@ def vertical_dataform(data_dict):
 
 
 def count_itemsets(itemsets_dict,transactions_dict):
-    '''given a dict of itemsets (initialized to zero) and a transaction database, 
+    '''given a dict of itemsets (initialized to zero) 
+    and a transaction database, 
     returns counts of itemsets in the TDB'''
     itemsets_dict2 = itemsets_dict
     for user in transactions_dict:
@@ -52,8 +57,9 @@ def prune_infreq_itemsets(itemsets_dict, min_sup):
 
         
 def gen_candidates(itemsets, n):
-    '''given an n-itemset, generates a (n+1)-itemset
-    also requires value of n i.e. the size of the itemset in the itemsets given'''
+    '''given an n-itemset, generates a 
+    (n+1)-itemset also requires value of n 
+    i.e. the size of the itemset in the itemsets given'''
     itemsets2 = {}
     first_iter = True
     str_bit = 0
@@ -65,7 +71,8 @@ def gen_candidates(itemsets, n):
                 key2_last = key2[-1]
                 if key1_last != key2_last:
                     if key1_last < key2_last:
-                        # create a key with both the last elements from key1 and key2
+                        # create a key with both the 
+                        # last elements from key1 and key2
                         # keep sorted
                         key = list(key1)
                         key.append(key2_last)
